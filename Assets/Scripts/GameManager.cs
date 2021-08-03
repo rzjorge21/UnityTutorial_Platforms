@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        Debug.Log("Recargando escena");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

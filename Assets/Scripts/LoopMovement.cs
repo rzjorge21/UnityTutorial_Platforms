@@ -25,15 +25,13 @@ public class LoopMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 thisPos = new Vector3(transform.position.x, transform.position.y, 0f);
+        if (Vector3.Distance(thisPos, points[destPoint].position) < allowence)
+        {
+            UpdateTarget();
+        }
         
         if (isDelayRunning == false) { 
-            Vector3 thisPos = new Vector3(transform.position.x, transform.position.y, 0f);
-
-            if (Vector3.Distance(thisPos, points[destPoint].position) < allowence)
-            {
-                UpdateTarget();
-            }
-
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, points[destPoint].position, step);
         }

@@ -25,6 +25,12 @@ public class PlayerController : MonoBehaviour
 
     public GameManager _gameManager;
 
+    [Header("Hit")]
+    public float hitRadius;
+    public LayerMask whatIsGroundHit;
+
+    private bool top, bottom, left, right, die;
+
 
     private void Awake()
     {
@@ -48,7 +54,20 @@ public class PlayerController : MonoBehaviour
         anim.SetInteger("velY", (int)rb.velocity.y);
         anim.SetBool("Grounded", grounded);
         
+        //Hit
+        left = Physics2D.OverlapCircle(transform.position + new Vector3(-0.33f,-0.33f,0f), hitRadius, whatIsGroundHit);
+        right = Physics2D.OverlapCircle(transform.position + new Vector3(0.33f,-0.33f,0f), hitRadius, whatIsGroundHit);
+        top = Physics2D.OverlapCircle(transform.position + new Vector3(0f,0.33f,0f), hitRadius, whatIsGroundHit);
+        bottom = Physics2D.OverlapCircle(transform.position + new Vector3(0f,-0.67f,0f), hitRadius, whatIsGroundHit);
 
+        if(!die){
+            if(top && bottom){
+                Die();
+            }
+            if(left && right){
+                Die();
+            }
+        }   
     }
 
     void Jump()
@@ -112,13 +131,28 @@ public class PlayerController : MonoBehaviour
         else if (dir > 0) GetComponent<SpriteRenderer>().flipX = false;
     }
 
-
+    // private void OnDrawGizmos() {
+    //     Gizmos.color = Color.yellow;
+    //     Gizmos.DrawSphere(transform.position + new Vector3(-0.33f,-0.33f, 0f), 0.1f);
+    //     Gizmos.DrawSphere(transform.position + new Vector3(0.33f,-0.33f, 0f), 0.1f);
+    //     Gizmos.DrawSphere(transform.position + new Vector3(0f,0.33f, 0f), 0.1f);
+    //     Gizmos.DrawSphere(transform.position + new Vector3(0f,-0.67f, 0f), 0.1f);
+    // }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Damage"))
         {
             Die();
+        }
+        if(collision.gameObject.layer == 9){
+            gameObject.transform.SetParent(collision.gameObject.transform);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other) {
+        if(other.gameObject.layer == 9){
+            gameObject.transform.SetParent(null);
         }
     }
 
@@ -134,6 +168,7 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
+        die = true;
         anim.SetTrigger("Hit");
         GetComponent<CapsuleCollider2D>().enabled = false;
         rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;

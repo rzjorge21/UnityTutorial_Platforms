@@ -2124,6 +2124,14 @@ MonoBehaviour:
   groundCheck: {fileID: 1692545426}
   groundCheckRadius: 0.2
   _gameManager: {fileID: 1470490367}
+  hitRadius: 0
+  whatIsGroundHit:
+    serializedVersion: 2
+    m_Bits: 0
+  topCheck: {fileID: 0}
+  bottomCheck: {fileID: 0}
+  leftCheck: {fileID: 0}
+  rightCheck: {fileID: 0}
 --- !u!114 &693358792
 MonoBehaviour:
   m_ObjectHideFlags: 0
